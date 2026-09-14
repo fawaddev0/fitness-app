@@ -49,9 +49,13 @@ const MAX_REPS = 340;
 
 interface StatsScreenProps {
   onTabChange?: (tab: NavTab) => void;
+  hideBottomDock?: boolean;
 }
 
-export default function StatsScreen({ onTabChange }: StatsScreenProps) {
+export default function StatsScreen({
+  onTabChange,
+  hideBottomDock = false,
+}: StatsScreenProps) {
   const [selectedFilter, setSelectedFilter] = useState('7 Days');
   const [selectedDayIndex, setSelectedDayIndex] = useState(3); // Thursday peak selected by default
   const [activeTab, setActiveTab] = useState<NavTab>('stats');
@@ -289,7 +293,12 @@ export default function StatsScreen({ onTabChange }: StatsScreenProps) {
       </ScrollView>
 
       {/* Floating Bottom Navigation Dock */}
-      <BottomNavigationDock activeTab={activeTab} onTabSelect={handleTabSelect} />
+      {!hideBottomDock && (
+        <BottomNavigationDock
+          activeTab={activeTab}
+          onTabSelect={handleTabSelect}
+        />
+      )}
     </SafeAreaView>
   );
 }

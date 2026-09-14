@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
+import * as SystemUI from 'expo-system-ui';
+import { StatusBar } from 'expo-status-bar';
 import { View, ActivityIndicator } from 'react-native';
 import {
   useFonts,
@@ -16,6 +18,7 @@ import {
 import { KineticColors } from '@/constants/theme';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
+SystemUI.setBackgroundColorAsync(KineticColors.surface).catch(() => {});
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
@@ -28,6 +31,7 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
+    SystemUI.setBackgroundColorAsync(KineticColors.surface).catch(() => {});
     if (fontsLoaded) {
       SplashScreen.hideAsync().catch(() => {});
     }
@@ -49,21 +53,28 @@ export default function RootLayout() {
   }
 
   return (
-    <Stack
-      screenOptions={{
-        headerShown: false,
-        contentStyle: { backgroundColor: KineticColors.surface },
-      }}
-    >
-      <Stack.Screen name="index" options={{ headerShown: false }} />
-      <Stack.Screen name="intro" options={{ headerShown: false }} />
-      <Stack.Screen name="home" options={{ headerShown: false }} />
-      <Stack.Screen name="roadmaps" options={{ headerShown: false }} />
-      <Stack.Screen name="stats" options={{ headerShown: false }} />
-      <Stack.Screen name="account" options={{ headerShown: false }} />
-      <Stack.Screen name="create-workout" options={{ headerShown: false, animation: 'slide_from_right' }} />
-      <Stack.Screen name="edit-workout" options={{ headerShown: false, animation: 'slide_from_right' }} />
-      <Stack.Screen name="active-workout" options={{ headerShown: false, animation: 'fade_from_bottom' }} />
-    </Stack>
+    <>
+      <StatusBar style="light" />
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          contentStyle: { backgroundColor: KineticColors.surface },
+          animation: 'ios_from_right',
+          presentation: 'card',
+          gestureEnabled: true,
+          animationMatchesGesture: true,
+        }}
+      >
+        <Stack.Screen name="index" options={{ headerShown: false, animation: 'fade' }} />
+        <Stack.Screen name="intro" options={{ headerShown: false, animation: 'fade' }} />
+        <Stack.Screen name="home" options={{ headerShown: false, animation: 'ios_from_right' }} />
+        <Stack.Screen name="roadmaps" options={{ headerShown: false, animation: 'ios_from_right' }} />
+        <Stack.Screen name="stats" options={{ headerShown: false, animation: 'ios_from_right' }} />
+        <Stack.Screen name="account" options={{ headerShown: false, animation: 'ios_from_right' }} />
+        <Stack.Screen name="create-workout" options={{ headerShown: false, animation: 'ios_from_right' }} />
+        <Stack.Screen name="edit-workout" options={{ headerShown: false, animation: 'ios_from_right' }} />
+        <Stack.Screen name="active-workout" options={{ headerShown: false, animation: 'ios_from_right' }} />
+      </Stack>
+    </>
   );
 }

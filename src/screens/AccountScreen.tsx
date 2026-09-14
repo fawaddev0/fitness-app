@@ -23,11 +23,13 @@ const PROFILE_IMAGE =
 interface AccountScreenProps {
   onSignOut?: () => void;
   onTabChange?: (tab: NavTab) => void;
+  hideBottomDock?: boolean;
 }
 
 export default function AccountScreen({
   onSignOut,
   onTabChange,
+  hideBottomDock = false,
 }: AccountScreenProps) {
   const handleSignOutPress = () => {
     Alert.alert('Sign Out', 'Are you sure you want to sign out?', [
@@ -189,7 +191,12 @@ export default function AccountScreen({
       </ScrollView>
 
       {/* Floating Bottom Navigation Dock */}
-      <BottomNavigationDock activeTab="account" onTabSelect={handleTabSelect} />
+      {!hideBottomDock && (
+        <BottomNavigationDock
+          activeTab="account"
+          onTabSelect={handleTabSelect}
+        />
+      )}
     </SafeAreaView>
   );
 }

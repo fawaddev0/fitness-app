@@ -72,6 +72,7 @@ interface HomeScreenProps {
   onEditWorkout?: (workout: WorkoutItem) => void;
   onStartWorkout?: (workout: WorkoutItem) => void;
   onTabChange?: (tab: NavTab) => void;
+  hideBottomDock?: boolean;
 }
 
 export default function HomeScreen({
@@ -79,6 +80,7 @@ export default function HomeScreen({
   onEditWorkout,
   onStartWorkout,
   onTabChange,
+  hideBottomDock = false,
 }: HomeScreenProps) {
   const [activeTab, setActiveTab] = useState<NavTab>('home');
 
@@ -228,10 +230,12 @@ export default function HomeScreen({
       </ScrollView>
 
       {/* Floating Bottom Navigation Bar */}
-      <BottomNavigationDock
-        activeTab={activeTab}
-        onTabSelect={handleTabSelect}
-      />
+      {!hideBottomDock && (
+        <BottomNavigationDock
+          activeTab={activeTab}
+          onTabSelect={handleTabSelect}
+        />
+      )}
     </SafeAreaView>
   );
 }

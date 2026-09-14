@@ -7,7 +7,7 @@ export default function IntroPage() {
 
   const handleComplete = () => {
     // Navigate to next screen / home once created
-    router.push('/home');
+    router.replace('/home');
   };
 
   return <IntroScreen onComplete={handleComplete} />;

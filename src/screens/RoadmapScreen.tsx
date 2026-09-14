@@ -27,7 +27,7 @@ const FILTER_CATEGORIES = [
   'Athletic Power',
 ];
 
-interface RoadmapItem {
+export interface RoadmapItem {
   id: string;
   title: string;
   image: string;
@@ -157,11 +157,13 @@ const ROADMAPS: RoadmapItem[] = [
 interface RoadmapScreenProps {
   onSelectRoadmap?: (roadmap: RoadmapItem) => void;
   onTabChange?: (tab: NavTab) => void;
+  hideBottomDock?: boolean;
 }
 
 export default function RoadmapScreen({
   onSelectRoadmap,
   onTabChange,
+  hideBottomDock = false,
 }: RoadmapScreenProps) {
   const [selectedFilter, setSelectedFilter] = useState('All Tracks');
   const [activeTab, setActiveTab] = useState<NavTab>('roadmaps');
@@ -378,7 +380,12 @@ export default function RoadmapScreen({
       </ScrollView>
 
       {/* Floating Bottom Navigation Dock */}
-      <BottomNavigationDock activeTab={activeTab} onTabSelect={handleTabSelect} />
+      {!hideBottomDock && (
+        <BottomNavigationDock
+          activeTab={activeTab}
+          onTabSelect={handleTabSelect}
+        />
+      )}
     </SafeAreaView>
   );
 }
