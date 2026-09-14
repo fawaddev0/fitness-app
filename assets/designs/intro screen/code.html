@@ -1,0 +1,341 @@
+<!DOCTYPE html><html class="dark" lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport">
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=Space+Grotesk:wght@600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+@layer base {
+  html, body {
+    width: 100vw;
+    margin: 0;
+    padding: 0;
+    background-color: #121316;
+  }
+  body {
+    overscroll-behavior: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
+  .pt-safe { padding-top: env(safe-area-inset-top, 0px); }
+  main > :first-child { margin-top: 0 !important; }
+  main > :last-child { margin-bottom: 0 !important; }
+}
+::-webkit-scrollbar { display: none; }
+</style>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "surface-tint": "#aed50c",
+        "surface": "#121316",
+        "surface-container-lowest": "#0d0e11",
+        "primary-fixed": "#D4FE42",
+        "primary-fixed-dim": "#aed50c",
+        "primary-container": "#D4FE42",
+        "on-primary-container": "#293500",
+        "on-primary": "#171e00",
+        "primary": "#ffffff",
+        "secondary": "#D4FE42",
+        "secondary-container": "#1aa291",
+        "on-secondary": "#003731",
+        "surface-container-low": "#1b1b1f",
+        "surface-container": "#1f1f23",
+        "surface-container-high": "#292a2d",
+        "surface-container-highest": "#343538",
+        "surface-variant": "#38393c",
+        "outline": "#8f937b",
+        "outline-variant": "#444934",
+        "on-surface": "#e3e2e6",
+        "on-surface-variant": "#c5c9ae",
+        "background": "#121316",
+        "on-background": "#e3e2e6"
+      },
+      borderRadius: {
+        DEFAULT: "1rem",
+        lg: "2rem",
+        xl: "3rem",
+        full: "9999px"
+      },
+      spacing: {
+        gutter: "1rem",
+        "space-lg": "1.5rem",
+        "space-xs": "0.25rem",
+        "space-sm": "0.5rem",
+        "space-xl": "2rem",
+        "space-md": "1rem",
+        margin: "1.25rem"
+      },
+      fontFamily: {
+        "headline-lg": ["Plus Jakarta Sans"],
+        "headline-md": ["Plus Jakarta Sans"],
+        "headline-sm": ["Plus Jakarta Sans"],
+        "body-lg": ["Plus Jakarta Sans"],
+        "body-md": ["Plus Jakarta Sans"],
+        "body-sm": ["Plus Jakarta Sans"],
+        "display-hero": ["Space Grotesk"],
+        "display-hero-mobile": ["Space Grotesk"],
+        "label-caps": ["Space Grotesk"],
+        "label-numeric": ["Space Grotesk"]
+      }
+    }
+  }
+}
+</script>
+</head>
+<body class="bg-surface text-on-surface font-body-md flex flex-col min-h-screen selection:bg-primary-container selection:text-on-primary-container">
+<main class="flex flex-col relative w-full pt-safe pb-safe bg-surface min-h-screen justify-between max-w-md mx-auto">
+<div class="flex flex-col w-full text-on-surface">
+<!-- Top Visual / Gym Photography with overlay gradient -->
+<div class="relative w-full rounded-b-[2.5rem] overflow-hidden bg-surface-container-lowest shadow-2xl">
+<div class="w-full h-64 bg-cover bg-center transition-all duration-700" id="heroImage" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBU-hAPWNEfRQJvGNxazkBILXBugBbkHMo2jykvaYTH10-zQnVLM6r3Xu0Z4s-K-5HZx283TcQLAJ_BDBIW3gBZWOzN2dko_HrnD5xFZusqCVRLyCElefHuZDZbnX5MkV-plWyrQed0nedqYgnM9jxktzu2jKvKgMV1WfXPbX5pXN8ub4KIcWYnoV7svs7hMDBQF1Yt5iwkc2ft12SjukSVsp2HzK6AiOwsefyLzWyfRkGr_7IdpZ_9xU7_hcG10ouherI'); background-position: center 22%;">
+<div class="w-full h-full bg-gradient-to-t from-surface via-surface/40 to-transparent flex flex-col justify-between p-margin">
+<!-- Top Bar with Logo & Skip -->
+<div class="flex items-center justify-between pt-1">
+</div>
+<!-- Interactive Progress Bar (Clickable steps) -->
+<div class="flex justify-center items-center pb-2">
+<div class="flex items-center gap-2 w-full max-w-[240px] px-2 cursor-pointer select-none" id="progressBarContainer">
+<button aria-label="Step 1" class="h-1.5 flex-1 rounded-full transition-all duration-300 bg-primary-fixed" id="bar-0" onclick="goToStep(0)"></button>
+<button aria-label="Step 2" class="h-1.5 flex-1 rounded-full transition-all duration-300 bg-primary-fixed" id="bar-1" onclick="goToStep(1)"></button>
+<button aria-label="Step 3" class="h-1.5 flex-1 rounded-full transition-all duration-300 bg-primary-fixed" id="bar-2" onclick="goToStep(2)"></button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Main Content Container with dynamic step replacement -->
+<div class="flex flex-col px-margin space-y-4 pt-5 pb-4">
+<!-- Dynamic Step Content Wrapper -->
+<div class="relative min-h-[350px]">
+<!-- STEP 1: Add Workout -->
+<div class="step-panel transition-all duration-300 flex flex-col opacity-0 hidden" id="step-panel-0">
+<!-- Header info -->
+<div class="flex flex-col items-center text-center mb-4">
+<h1 class="font-headline-lg text-[26px] leading-[32px] text-primary font-bold tracking-tight">1. Add Your Workout</h1>
+<p class="font-body-md text-[13px] text-primary-fixed font-semibold tracking-wide mt-0.5">Custom Routines &amp; Target Sets</p>
+</div>
+<!-- Detailed Step Card -->
+<div class="p-4 rounded-2xl bg-surface-container-low border border-outline-variant/30 shadow-lg flex flex-col gap-3">
+<div class="flex items-start gap-3.5">
+<div class="flex-shrink-0 w-12 h-12 rounded-xl bg-surface-container-high border border-primary-fixed/30 flex items-center justify-center text-primary-fixed shadow-inner">
+<span class="material-symbols-outlined text-[26px]">fitness_center</span>
+</div>
+<div class="flex flex-col min-w-0 flex-1">
+<span class="font-headline-sm text-[16px] font-bold text-white tracking-tight">Routine Blueprint</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed mt-0.5">
+                  Create or select tailored training routines with customized sets, target reps, and structured rest intervals suited to your goals.
+                </p>
+</div>
+</div>
+<!-- Feature Highlight List -->
+<div class="mt-1 pt-3 border-t border-surface-container-highest/60 flex flex-col gap-2">
+<div class="flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg bg-surface-container/60">
+<span class="material-symbols-outlined text-primary-fixed text-[18px]">tune</span>
+<span class="text-xs text-on-surface font-medium">Quick Routine Builder</span>
+<span class="ml-auto text-[10px] font-mono text-outline uppercase font-semibold">Ready</span>
+</div>
+<div class="flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg bg-surface-container/60">
+<span class="material-symbols-outlined text-primary-fixed text-[18px]">format_list_numbered</span>
+<span class="text-xs text-on-surface font-medium">Smart Sets &amp; Reps Stepper</span>
+<span class="ml-auto text-[10px] font-mono text-outline uppercase font-semibold">Auto</span>
+</div>
+<div class="flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg bg-surface-container/60">
+<span class="material-symbols-outlined text-primary-fixed text-[18px]">timer</span>
+<span class="text-xs text-on-surface font-medium">Auto Rest Timer</span>
+<span class="ml-auto text-[10px] font-mono text-outline uppercase font-semibold">Haptic</span>
+</div>
+</div>
+</div>
+</div>
+<!-- STEP 2: Do Workout in Front of Camera -->
+<div class="step-panel transition-all duration-300 flex-col opacity-0 hidden" id="step-panel-1">
+<!-- Header info -->
+<div class="flex flex-col items-center text-center mb-4">
+<h1 class="font-headline-lg text-[26px] leading-[32px] text-primary font-bold tracking-tight">2. Workout in Front of Camera</h1>
+<p class="font-body-md text-[13px] text-primary-fixed font-semibold tracking-wide mt-0.5">Live Computer Vision Guidance</p>
+</div>
+<!-- Detailed Step Card -->
+<div class="p-4 rounded-2xl bg-surface-container-low border border-outline-variant/30 shadow-lg flex flex-col gap-3">
+<div class="flex items-start gap-3.5">
+<div class="flex-shrink-0 w-12 h-12 rounded-xl bg-surface-container-high border border-primary-fixed/30 flex items-center justify-center text-primary-fixed shadow-inner">
+<span class="material-symbols-outlined text-[26px]">videocam</span>
+</div>
+<div class="flex flex-col min-w-0 flex-1">
+<span class="font-headline-sm text-[16px] font-bold text-white tracking-tight">MediaPipe Kinematics</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed mt-0.5">
+                  Tracks 33 skeletal joints in real-time with zero wearable hardware, validating squat depth, joint angles, and counting reps out loud.
+                </p>
+</div>
+</div>
+<!-- Feature Highlight List -->
+<div class="mt-1 pt-3 border-t border-surface-container-highest/60 flex flex-col gap-2">
+<div class="flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg bg-surface-container/60">
+<span class="material-symbols-outlined text-primary-fixed text-[18px]">hub</span>
+<span class="text-xs text-on-surface font-medium">33 Skeletal Nodes Tracked</span>
+<span class="ml-auto text-[10px] font-mono text-primary-fixed uppercase font-semibold">60 FPS</span>
+</div>
+<div class="flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg bg-surface-container/60">
+<span class="material-symbols-outlined text-primary-fixed text-[18px]">straighten</span>
+<span class="text-xs text-on-surface font-medium">Real-Time Form Auditing</span>
+<span class="ml-auto text-[10px] font-mono text-primary-fixed uppercase font-semibold">&lt;5ms Latency</span>
+</div>
+<div class="flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg bg-surface-container/60">
+<span class="material-symbols-outlined text-primary-fixed text-[18px]">record_voice_over</span>
+<span class="text-xs text-on-surface font-medium">Audio Rep Counter</span>
+<span class="ml-auto text-[10px] font-mono text-primary-fixed uppercase font-semibold">Voice</span>
+</div>
+</div>
+</div>
+</div>
+<!-- STEP 3: Keep Track of Your Stats -->
+<div class="step-panel transition-all duration-300 flex-col opacity-100" id="step-panel-2">
+<!-- Header info -->
+<div class="flex flex-col items-center text-center mb-4">
+<h1 class="font-headline-lg text-[26px] leading-[32px] text-primary font-bold tracking-tight">3. Keep Track of Your Stats</h1>
+<p class="font-body-md text-[13px] text-primary-fixed font-semibold tracking-wide mt-0.5">Precision Biometric Telemetry</p>
+</div>
+<!-- Detailed Step Card -->
+<div class="p-4 rounded-2xl bg-surface-container-low border border-outline-variant/30 shadow-lg flex flex-col gap-3">
+<div class="flex items-start gap-3.5">
+<div class="flex-shrink-0 w-12 h-12 rounded-xl bg-surface-container-high border border-primary-fixed/30 flex items-center justify-center text-primary-fixed shadow-inner">
+<span class="material-symbols-outlined text-[26px]">monitoring</span>
+</div>
+<div class="flex flex-col min-w-0 flex-1">
+<span class="font-headline-sm text-[16px] font-bold text-white tracking-tight">Biometric Telemetry</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed mt-0.5">
+                  Automated posture scores, weekly rep output curves, lumbar alignment history, and actionable AI coach tips after every workout.
+                </p>
+</div>
+</div>
+<!-- Feature Highlight List -->
+<div class="mt-1 pt-3 border-t border-surface-container-highest/60 flex flex-col gap-2">
+<div class="flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg bg-surface-container/60">
+<span class="material-symbols-outlined text-primary-fixed text-[18px]">show_chart</span>
+<span class="text-xs text-on-surface font-medium">Form Trajectory Curve</span>
+<span class="ml-auto text-[10px] font-mono text-primary-fixed uppercase font-semibold">98.4% Acc</span>
+</div>
+<div class="flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg bg-surface-container/60">
+<span class="material-symbols-outlined text-primary-fixed text-[18px]">verified</span>
+<span class="text-xs text-on-surface font-medium">Biomechanical Accuracy Score</span>
+<span class="ml-auto text-[10px] font-mono text-primary-fixed uppercase font-semibold">Score: 94</span>
+</div>
+<div class="flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg bg-surface-container/60">
+<span class="material-symbols-outlined text-primary-fixed text-[18px]">calendar_month</span>
+<span class="text-xs text-on-surface font-medium">Daily Rep Frequency</span>
+<span class="ml-auto text-[10px] font-mono text-primary-fixed uppercase font-semibold">Weekly View</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Interactive Navigation Controls -->
+<div class="flex flex-col px-margin pb-6 gap-3">
+<div class="flex flex-col items-center gap-3.5 w-full">
+<!-- Skip Intro Pill Button (styled identically to previous dark pill button) -->
+<button class="w-full py-4 px-6 rounded-full bg-primary-fixed text-on-primary font-headline-sm text-headline-sm font-bold shadow-lg flex items-center justify-center gap-2 hover:brightness-105 active:scale-[0.98] transition-transform" id="primaryBtn" onclick="nextStep()">
+<span class="font-bold tracking-tight text-on-primary" id="btnLabel">Next Step</span>
+<span class="material-symbols-outlined text-[20px] text-on-primary" id="btnIcon">arrow_forward</span>
+</button>
+<!-- Primary Next / Action Button -->
+<button class="py-2 px-4 rounded-full bg-transparent text-on-surface-variant font-headline-sm text-body-md font-semibold hover:text-white transition-all flex items-center justify-center whitespace-nowrap" id="skipIntroBtn" onclick="goToStep(2)">
+<span class="" id="btnLabel">Skip Introduction</span>
+</button>
+</div>
+</div>
+<script>
+  let currentStep = 0;
+  const totalSteps = 3;
+
+  const panels = [
+    document.getElementById('step-panel-0'),
+    document.getElementById('step-panel-1'),
+    document.getElementById('step-panel-2')
+  ];
+
+  const bars = [
+    document.getElementById('bar-0'),
+    document.getElementById('bar-1'),
+    document.getElementById('bar-2')
+  ];
+
+  const skipIntroBtn = document.getElementById('skipIntroBtn');
+  const primaryBtn = document.getElementById('primaryBtn');
+  const btnLabel = document.getElementById('btnLabel');
+  const btnIcon = document.getElementById('btnIcon');
+
+  function goToStep(stepIndex) {
+    if (stepIndex < 0 || stepIndex >= totalSteps) return;
+
+    currentStep = stepIndex;
+
+    // Update Panels
+    panels.forEach((panel, idx) => {
+      if (idx === currentStep) {
+        panel.classList.remove('hidden');
+        setTimeout(() => {
+          panel.classList.remove('opacity-0');
+          panel.classList.add('opacity-100');
+        }, 20);
+      } else {
+        panel.classList.add('opacity-0');
+        panel.classList.remove('opacity-100');
+        setTimeout(() => {
+          if (idx !== currentStep) {
+            panel.classList.add('hidden');
+          }
+        }, 180);
+      }
+    });
+
+    // Update Progress Bars
+    bars.forEach((bar, idx) => {
+      if (idx <= currentStep) {
+        bar.classList.remove('bg-surface-variant');
+        bar.classList.add('bg-primary-fixed');
+      } else {
+        bar.classList.remove('bg-primary-fixed');
+        bar.classList.add('bg-surface-variant');
+      }
+    });
+
+    // Update Buttons & Labels
+    if (currentStep < totalSteps - 1) {
+      btnLabel.textContent = "Next Step";
+      btnIcon.textContent = "arrow_forward";
+      if (skipIntroBtn) {
+        skipIntroBtn.classList.remove('hidden');
+      }
+    } else {
+      btnLabel.textContent = "Get Started";
+      btnIcon.textContent = "check_circle";
+      if (skipIntroBtn) {
+        skipIntroBtn.classList.add('hidden');
+      }
+    }
+  }
+
+  function nextStep() {
+    if (currentStep < totalSteps - 1) {
+      goToStep(currentStep + 1);
+    } else {
+      // Completed Walkthrough action
+      btnLabel.textContent = "Ready to Lift";
+      btnIcon.textContent = "done_all";
+      primaryBtn.classList.add('pointer-events-none', 'opacity-90');
+    }
+  }
+
+  // Initialize
+  goToStep(0);
+</script>
+</main>
+
+
+</body></html>
