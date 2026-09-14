@@ -58,6 +58,12 @@ export default function RootLayout() {
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="intro" options={{ headerShown: false }} />
       <Stack.Screen name="home" options={{ headerShown: false }} />
+      <Stack.Screen name="roadmaps" options={{ headerShown: false }} />
+      <Stack.Screen name="stats" options={{ headerShown: false }} />
+      <Stack.Screen name="account" options={{ headerShown: false }} />
+      <Stack.Screen name="create-workout" options={{ headerShown: false, animation: 'slide_from_right' }} />
+      <Stack.Screen name="edit-workout" options={{ headerShown: false, animation: 'slide_from_right' }} />
+      <Stack.Screen name="active-workout" options={{ headerShown: false, animation: 'fade_from_bottom' }} />
     </Stack>
   );
 }

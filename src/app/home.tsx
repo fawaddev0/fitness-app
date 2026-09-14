@@ -7,15 +7,31 @@ export default function HomePage() {
   const router = useRouter();
 
   const handleAddWorkout = () => {
-    console.log('Add workout clicked');
+    router.push('/create-workout');
   };
 
   const handleEditWorkout = (workout: WorkoutItem) => {
-    console.log('Edit workout:', workout.title);
+    router.push({
+      pathname: '/edit-workout',
+      params: {
+        id: workout.id,
+        title: workout.title,
+        sets: workout.sets,
+        reps: workout.reps,
+      },
+    });
   };
 
   const handleStartWorkout = (workout: WorkoutItem) => {
-    console.log('Start workout:', workout.title);
+    router.push({
+      pathname: '/active-workout',
+      params: {
+        id: workout.id,
+        title: workout.title,
+        sets: workout.sets,
+        reps: workout.reps,
+      },
+    });
   };
 
   const handleTabChange = (tab: NavTab) => {
