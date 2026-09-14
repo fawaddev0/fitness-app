@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     gap: 3,
   },
   tabButtonActive: {
-    backgroundColor: KineticColors.primaryFixed,
+    backgroundColor: KineticColors.surfaceTint,
     shadowColor: KineticColors.primaryFixed,
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.45,

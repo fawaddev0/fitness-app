@@ -114,6 +114,43 @@ export default function HomeScreen({
           <Text style={styles.welcomeTitle}>Welcome back, Alex</Text>
         </View>
 
+        {/* Quick Metrics Row: Workouts & Streak */}
+        <View style={styles.quickMetricsRow}>
+          {/* Workouts Card */}
+          <View style={styles.quickMetricCard}>
+            <View style={styles.quickMetricHeader}>
+              <Text style={styles.quickMetricLabel}>Workouts</Text>
+              <MaterialIcons
+                name="fitness-center"
+                size={18}
+                color={KineticColors.surfaceTint}
+              />
+            </View>
+            <View style={styles.quickMetricBody}>
+              <Text style={styles.quickMetricValue}>148</Text>
+              <Text style={styles.quickMetricSub}>Total completed</Text>
+            </View>
+          </View>
+
+          {/* Streak Card */}
+          <View style={styles.quickMetricCard}>
+            <View style={styles.quickMetricHeader}>
+              <Text style={styles.quickMetricLabel}>Streak</Text>
+              <MaterialIcons
+                name="whatshot"
+                size={18}
+                color={KineticColors.secondary}
+              />
+            </View>
+            <View style={styles.quickMetricBody}>
+              <Text style={[styles.quickMetricValue, { color: KineticColors.secondary }]}>
+                14 <Text style={styles.quickMetricUnit}>days</Text>
+              </Text>
+              <Text style={styles.quickMetricSub}>Active consistency</Text>
+            </View>
+          </View>
+        </View>
+
         {/* My Workouts Section */}
         <View style={styles.workoutsSection}>
           <View style={styles.sectionHeader}>
@@ -180,7 +217,7 @@ export default function HomeScreen({
                     onPress={() => onStartWorkout?.(workout)}
                     style={styles.startBtn}
                   >
-                    <MaterialIcons name="play-arrow" size={18} color="#293500" />
+                    <MaterialIcons name="play-arrow" size={18} color={KineticColors.primaryFixed} />
                     <Text style={styles.startBtnText}>Start</Text>
                   </TouchableOpacity>
                 </View>
@@ -252,7 +289,7 @@ const styles = StyleSheet.create({
     paddingBottom: 160, // Ample clearance for floating bottom dock
   },
   welcomeSection: {
-    marginBottom: 24,
+    marginBottom: 16,
   },
   dateLabel: {
     fontFamily: 'SpaceGrotesk_700Bold',
@@ -270,8 +307,61 @@ const styles = StyleSheet.create({
     color: KineticColors.onSurface,
     letterSpacing: -0.24,
   },
+  quickMetricsRow: {
+    flexDirection: 'row',
+    gap: 12,
+    marginBottom: 24,
+  },
+  quickMetricCard: {
+    flex: 1,
+    backgroundColor: KineticColors.surfaceContainer,
+    borderRadius: 16,
+    padding: 16,
+    gap: 10,
+    borderWidth: 1,
+    borderColor: 'rgba(50, 50, 50, 1)',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  quickMetricHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  quickMetricLabel: {
+    fontFamily: 'SpaceGrotesk_700Bold',
+    fontSize: 10,
+    lineHeight: 13,
+    color: KineticColors.onSurfaceVariant,
+    textTransform: 'uppercase',
+    letterSpacing: 0.8,
+  },
+  quickMetricBody: {
+    gap: 2,
+  },
+  quickMetricValue: {
+    fontFamily: 'PlusJakartaSans_700Bold',
+    fontSize: 20,
+    lineHeight: 26,
+    color: KineticColors.onSurface,
+  },
+  quickMetricUnit: {
+    fontFamily: 'PlusJakartaSans_400Regular',
+    fontSize: 12,
+    color: KineticColors.onSurfaceVariant,
+  },
+  quickMetricSub: {
+    fontFamily: 'PlusJakartaSans_400Regular',
+    fontSize: 12,
+    lineHeight: 16,
+    color: KineticColors.onSurfaceVariant,
+  },
   workoutsSection: {
     gap: 16,
+    marginTop: 30
   },
   sectionHeader: {
     flexDirection: 'row',
@@ -287,7 +377,7 @@ const styles = StyleSheet.create({
   addWorkoutBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: KineticColors.primaryFixed,
+    backgroundColor: KineticColors.primary,
     paddingHorizontal: 14,
     paddingVertical: 8,
     borderRadius: 9999,
@@ -320,7 +410,7 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 3,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.05)',
+    borderColor: 'rgba(50, 50, 50, 1)',
   },
   cardTopRow: {
     flexDirection: 'row',
@@ -394,22 +484,17 @@ const styles = StyleSheet.create({
     flex: 1,
     minHeight: 44,
     borderRadius: 9999,
-    backgroundColor: KineticColors.primaryFixed,
+    backgroundColor: KineticColors.surfaceContainerHigh,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 6,
-    shadowColor: KineticColors.primaryFixed,
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.35,
-    shadowRadius: 14,
-    elevation: 4,
   },
   startBtnText: {
     fontFamily: 'SpaceGrotesk_700Bold',
     fontSize: 11,
     lineHeight: 14,
-    color: '#293500',
+    color: KineticColors.primaryFixed,
     textTransform: 'uppercase',
     letterSpacing: 0.8,
   },
