@@ -45,8 +45,8 @@ export function BottomNavigationDock({
             >
               <MaterialIcons
                 name={tab.icon}
-                size={20}
-                color={isActive ? '#121316' : KineticColors.onSurfaceVariant}
+                size={25}
+                color={isActive ? '#121316' : 'rgba(227, 226, 230, 0.45)'}
               />
               <Text
                 style={[
@@ -80,34 +80,31 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: 'rgba(18, 19, 22, 0.94)',
-    borderRadius: 9999,
-    paddingHorizontal: 8,
-    paddingVertical: 6,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.12)',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 12 },
-    shadowOpacity: 0.6,
-    shadowRadius: 32,
-    elevation: 16,
+    borderRadius: 20,
+    paddingHorizontal: 0,
+    paddingVertical: 0,
+    borderWidth: 1.2,
+    borderColor: 'rgba(128, 128, 128, 0.28)',
+    boxShadow: '0 0 16px rgba(212, 254, 66, 0)',
+    elevation: 12,
     gap: 4,
   },
   tabButton: {
     flex: 1,
-    minHeight: 46,
-    borderRadius: 9999,
+    minHeight: 56,
+    borderRadius: 20,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 4,
+    paddingVertical: 12,
     paddingHorizontal: 6,
-    gap: 2,
+    gap: 3,
   },
   tabButtonActive: {
     backgroundColor: KineticColors.primaryFixed,
     shadowColor: KineticColors.primaryFixed,
     shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.4,
-    shadowRadius: 16,
+    shadowOpacity: 0.45,
+    shadowRadius: 14,
     elevation: 6,
   },
   tabLabel: {
@@ -121,6 +118,6 @@ const styles = StyleSheet.create({
     color: '#121316',
   },
   tabLabelInactive: {
-    color: KineticColors.onSurfaceVariant,
+    color: 'rgba(227, 226, 230, 0.45)',
   },
 });
