@@ -16,67 +16,12 @@ import { KineticColors, AppRounded, AppSpacing } from '../constants/theme';
 export const PROFILE_IMAGE =
   'https://lh3.googleusercontent.com/aida-public/AB6AXuAJzo618P-HtjycCJZawKnmhDL1zWFC7qVEdn8HrpQxsKCQD3QE4EaJ5Qr9tmKfZ_GHfRHE3bQCXLvEqfhL8XmiWmXou4MsKvhByZNnYcuodxEzYuY6KMEzR9mV5s2a3pwizGaFvYwj8fg676AJn3suOnVZlt_k-VjZGEemDVNysnnfkA1gpDWVfC8q3u61B4Pgkwt3OANfhu_YdyllRBZFcvpEIgcwDICw52cX7Inp46hz3buizgChFw';
 
-export interface ExerciseOption {
-  id: string;
-  name: string;
-  category: string;
-  image: string;
-  icon: keyof typeof MaterialIcons.glyphMap;
-}
+import { GlobalWorkout } from '../types/models';
 
-export const EXERCISE_OPTIONS: ExerciseOption[] = [
-  {
-    id: 'seated-shoulder-press',
-    name: 'Seated Shoulder Press',
-    category: 'Overhead • Anterior Deltoid',
-    image:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuCf8qnBidekATccEa2sDRBzjeucOmpENE3VVY1iheygmIf2sg6PZyhKz_tV-d6TLDfCy6VlKn6N-gUAmd7kZX4OLMBhyWE_AQkaR1-ke4nPVT58U3O9n18MYahOu_ulQ_KCDcKSx6DPwGvfSk0u3mM2uU-Y20wnq5Bpba4lfPG_fYFaddXi7ysy4AQ267E9FcyrjUP_tTHSAWoXM0YKygAzzi0HMJwY0cdw5MRLF0L-aY40E8dFJliU6Q',
-    icon: 'sports-martial-arts',
-  },
-  {
-    id: 'dumbbell-bicep-curls',
-    name: 'Dumbbell Bicep Curls',
-    category: 'Hypertrophy • Biceps Brachii',
-    image:
-      'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=400&q=80',
-    icon: 'fitness-center',
-  },
-  {
-    id: 'barbell-back-squats',
-    name: 'Barbell Back Squats',
-    category: 'Compound • Quadriceps & Glutes',
-    image:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuCfjdYZJsDwIA0Yg5wKgFUV64-ATwINWmR5UOzE6Pk9y6N8fdEv-URM3keThQA5Sidxzz5m-0jSCMvToQ_5lEprF7SbvEVO7ALgr-OmYv4qQEyHvU8wFec7DxdkJ-ZqAlnYCtBm2o2frgBlanuXq1_cqynRwYCGzts4_usR_kJL6QbmcSBtM71Tanu8LUxltUVk8sOcc2AUsRVmdFbdY5XqDbmldtJGdhpcrijNAEZD_A8H7I26HG_LRg',
-    icon: 'directions-run',
-  },
-  {
-    id: 'deficit-push-ups',
-    name: 'Deficit Push-ups',
-    category: 'Bodyweight • Pectoralis Major',
-    image:
-      'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&w=400&q=80',
-    icon: 'sports-gymnastics',
-  },
-  {
-    id: 'romanian-deadlift',
-    name: 'Romanian Deadlift',
-    category: 'Kinetic Chain • Hamstrings',
-    image:
-      'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=400&q=80',
-    icon: 'fitness-center',
-  },
-  {
-    id: 'cable-lateral-raises',
-    name: 'Cable Lateral Raises',
-    category: 'Isolation • Medial Deltoid',
-    image:
-      'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=400&q=80',
-    icon: 'unfold-more',
-  },
-];
+const PLACEHOLDER_IMAGE = 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=400&q=80';
 
 export interface WorkoutFormData {
-  exercise: ExerciseOption;
+  exercise: GlobalWorkout | null;
   reps: number;
   sets: number;
   restSeconds: number;
@@ -84,6 +29,7 @@ export interface WorkoutFormData {
 
 export interface WorkoutFormProps {
   mode: 'create' | 'edit';
+  options: GlobalWorkout[];
   initialData?: Partial<WorkoutFormData>;
   onBack?: () => void;
   onSubmit?: (data: WorkoutFormData) => void;
@@ -92,13 +38,14 @@ export interface WorkoutFormProps {
 
 export function WorkoutForm({
   mode,
+  options,
   initialData,
   onBack,
   onSubmit,
   onDelete,
 }: WorkoutFormProps) {
-  const [selectedExercise, setSelectedExercise] = useState<ExerciseOption>(
-    initialData?.exercise || EXERCISE_OPTIONS[0]
+  const [selectedExercise, setSelectedExercise] = useState<GlobalWorkout | null>(
+    initialData?.exercise || (options.length > 0 ? options[0] : null)
   );
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [reps, setReps] = useState(initialData?.reps ?? 12);
@@ -119,7 +66,7 @@ export function WorkoutForm({
     setRestSeconds((prev) => Math.max(15, Math.min(300, prev + delta)));
   };
 
-  const handleSelectExercise = (item: ExerciseOption) => {
+  const handleSelectExercise = (item: GlobalWorkout) => {
     setSelectedExercise(item);
     setDropdownOpen(false);
   };
@@ -196,7 +143,7 @@ export function WorkoutForm({
             <View style={styles.selectedExerciseInfo}>
               <View style={styles.thumbnailWrapper}>
                 <Image
-                  source={{ uri: selectedExercise.image }}
+                  source={{ uri: selectedExercise?.image_url || PLACEHOLDER_IMAGE }}
                   style={styles.exerciseThumbnail}
                   resizeMode="cover"
                 />
@@ -207,10 +154,7 @@ export function WorkoutForm({
               </View>
               <View style={styles.exerciseTextColumn}>
                 <Text style={styles.exerciseName} numberOfLines={1}>
-                  {selectedExercise.name}
-                </Text>
-                <Text style={styles.exerciseCategory} numberOfLines={1}>
-                  {selectedExercise.category}
+                  {selectedExercise?.title || 'Select an exercise'}
                 </Text>
               </View>
             </View>
@@ -227,8 +171,8 @@ export function WorkoutForm({
           {/* Dropdown Menu Drawer */}
           {dropdownOpen && (
             <View style={styles.dropdownContainer}>
-              {EXERCISE_OPTIONS.map((item) => {
-                const isSelected = item.id === selectedExercise.id;
+              {options.map((item) => {
+                const isSelected = item.id === selectedExercise?.id;
                 return (
                   <TouchableOpacity
                     key={item.id}
@@ -241,7 +185,7 @@ export function WorkoutForm({
                   >
                     <View style={styles.dropdownItemLeft}>
                       <MaterialIcons
-                        name={item.icon}
+                        name="fitness-center"
                         size={20}
                         color={
                           isSelected
@@ -257,10 +201,7 @@ export function WorkoutForm({
                           ]}
                           numberOfLines={1}
                         >
-                          {item.name}
-                        </Text>
-                        <Text style={styles.dropdownItemCategory} numberOfLines={1}>
-                          {item.category}
+                          {item.title}
                         </Text>
                       </View>
                     </View>

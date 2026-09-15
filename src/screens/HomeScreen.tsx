@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,11 +7,15 @@ import {
   TouchableOpacity,
   ScrollView,
   Pressable,
+  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import { BottomNavigationDock, NavTab } from '../components/BottomNavigationDock';
 import { KineticColors, Typography } from '../constants/theme';
+import { useAuth } from '../context/AuthContext';
+import { getUserWorkouts } from '../data/workouts';
+import { UserCreatedWorkout } from '../types/models';
 
 const LOGO_IMAGE =
   'https://lh3.googleusercontent.com/aida/AEtjO1UhM0H9GMRwYsuavz7YIObGponbKbVMRmYgoeU6kc20Qd0Si7Ktowar_g8PGyimjIX53AfQpvjJ2OSz_no6-cqG31wstMGGW46YEYIUb92leVWKV5DrDv94-IywY6PQ9zSkx1LxaOhOdcQ8JZdWF71QlYOgomIquEYzIUPhTWslc2_daCuAQ7Rr_Dgjf4_FQuCxWi6yUUTSXq0UFVpZL5hVir3dTfZL-5JYmgAUw6bffmW7nxZVrLDJjBb1';
@@ -19,58 +23,12 @@ const LOGO_IMAGE =
 const PROFILE_IMAGE =
   'https://lh3.googleusercontent.com/aida-public/AB6AXuAJzo618P-HtjycCJZawKnmhDL1zWFC7qVEdn8HrpQxsKCQD3QE4EaJ5Qr9tmKfZ_GHfRHE3bQCXLvEqfhL8XmiWmXou4MsKvhByZNnYcuodxEzYuY6KMEzR9mV5s2a3pwizGaFvYwj8fg676AJn3suOnVZlt_k-VjZGEemDVNysnnfkA1gpDWVfC8q3u61B4Pgkwt3OANfhu_YdyllRBZFcvpEIgcwDICw52cX7Inp46hz3buizgChFw';
 
-export interface WorkoutItem {
-  id: string;
-  title: string;
-  image: string;
-  sets: string;
-  reps: string;
-  weight: string;
-}
-
-const WORKOUTS: WorkoutItem[] = [
-  {
-    id: '1',
-    title: 'Barbell Squats & Quad Burn',
-    image:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuCfjdYZJsDwIA0Yg5wKgFUV64-ATwINWmR5UOzE6Pk9y6N8fdEv-URM3keThQA5Sidxzz5m-0jSCMvToQ_5lEprF7SbvEVO7ALgr-OmYv4qQEyHvU8wFec7DxdkJ-ZqAlnYCtBm2o2frgBlanuXq1_cqynRwYCGzts4_usR_kJL6QbmcSBtM71Tanu8LUxltUVk8sOcc2AUsRVmdFbdY5XqDbmldtJGdhpcrijNAEZD_A8H7I26HG_LRg',
-    sets: '4 Sets',
-    reps: '12 Reps',
-    weight: '85 kg',
-  },
-  {
-    id: '2',
-    title: 'Incline Dumbbell Bench',
-    image:
-      'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=400&q=80',
-    sets: '3 Sets',
-    reps: '10 Reps',
-    weight: '32 kg',
-  },
-  {
-    id: '3',
-    title: 'Romanian Deadlift',
-    image:
-      'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=400&q=80',
-    sets: '4 Sets',
-    reps: '8 Reps',
-    weight: '110 kg',
-  },
-  {
-    id: '4',
-    title: 'Pull-Ups & Lat Pulldown',
-    image:
-      'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=400&q=80',
-    sets: '4 Sets',
-    reps: '10 Reps',
-    weight: 'Bodyweight',
-  },
-];
+const PLACEHOLDER_IMAGE = 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=400&q=80';
 
 interface HomeScreenProps {
   onAddWorkout?: () => void;
-  onEditWorkout?: (workout: WorkoutItem) => void;
-  onStartWorkout?: (workout: WorkoutItem) => void;
+  onEditWorkout?: (workout: UserCreatedWorkout) => void;
+  onStartWorkout?: (workout: UserCreatedWorkout) => void;
   onTabChange?: (tab: NavTab) => void;
   hideBottomDock?: boolean;
 }
@@ -82,7 +40,21 @@ export default function HomeScreen({
   onTabChange,
   hideBottomDock = false,
 }: HomeScreenProps) {
+  const { user, userProfile } = useAuth();
   const [activeTab, setActiveTab] = useState<NavTab>('home');
+  const [workouts, setWorkouts] = useState<UserCreatedWorkout[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadUserWorkouts() {
+      if (user) {
+        const userWorkouts = await getUserWorkouts(user.id);
+        setWorkouts(userWorkouts);
+      }
+      setIsLoading(false);
+    }
+    loadUserWorkouts();
+  }, [user]);
 
   const handleTabSelect = (tab: NavTab) => {
     setActiveTab(tab);
@@ -112,8 +84,10 @@ export default function HomeScreen({
       >
         {/* Athlete Welcome Strip */}
         <View style={styles.welcomeSection}>
-          <Text style={styles.dateLabel}>Thursday, Oct 24</Text>
-          <Text style={styles.welcomeTitle}>Welcome back, Alex</Text>
+          <Text style={styles.dateLabel}>
+            {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}
+          </Text>
+          <Text style={styles.welcomeTitle}>Welcome back{userProfile?.fullname || 'Guest User'}</Text>
         </View>
 
         {/* Quick Metrics Row: Workouts & Streak */}
@@ -169,62 +143,67 @@ export default function HomeScreen({
 
           {/* Workout Cards */}
           <View style={styles.cardsContainer}>
-            {WORKOUTS.map((workout) => (
-              <View key={workout.id} style={styles.workoutCard}>
-                {/* Card Top Info */}
-                <View style={styles.cardTopRow}>
-                  <View style={styles.workoutThumbnailBox}>
-                    <Image
-                      source={{ uri: workout.image }}
-                      style={styles.workoutThumbnail}
-                      resizeMode="cover"
-                    />
-                  </View>
+            {isLoading ? (
+              <ActivityIndicator size="large" color={KineticColors.primaryFixed} />
+            ) : workouts.length === 0 ? (
+              <Text style={{ color: KineticColors.onSurfaceVariant, textAlign: 'center', marginTop: 20 }}>
+                No workouts created yet. Click "Add Workout" to create one.
+              </Text>
+            ) : (
+              workouts.map((workout) => (
+                <View key={workout.id} style={styles.workoutCard}>
+                  {/* Card Top Info */}
+                  <View style={styles.cardTopRow}>
+                    <View style={styles.workoutThumbnailBox}>
+                      <Image
+                        source={{ uri: workout.workouts?.image_url || PLACEHOLDER_IMAGE }}
+                        style={styles.workoutThumbnail}
+                        resizeMode="cover"
+                      />
+                    </View>
 
-                  <View style={styles.cardDetails}>
-                    <Text style={styles.workoutTitle} numberOfLines={1}>
-                      {workout.title}
-                    </Text>
-                    <View style={styles.chipRow}>
-                      <View style={styles.chip}>
-                        <Text style={styles.chipText}>{workout.sets}</Text>
-                      </View>
-                      <View style={styles.chip}>
-                        <Text style={styles.chipText}>{workout.reps}</Text>
-                      </View>
-                      <View style={styles.chip}>
-                        <Text style={styles.chipText}>{workout.weight}</Text>
+                    <View style={styles.cardDetails}>
+                      <Text style={styles.workoutTitle} numberOfLines={1}>
+                        {workout.workouts?.title || 'Unknown Workout'}
+                      </Text>
+                      <View style={styles.chipRow}>
+                        <View style={styles.chip}>
+                          <Text style={styles.chipText}>{workout.sets_count} Sets</Text>
+                        </View>
+                        <View style={styles.chip}>
+                          <Text style={styles.chipText}>{workout.reps_count} Reps</Text>
+                        </View>
                       </View>
                     </View>
                   </View>
-                </View>
 
-                {/* Card Bottom Actions */}
-                <View style={styles.cardActionsRow}>
-                  <TouchableOpacity
-                    activeOpacity={0.8}
-                    onPress={() => onEditWorkout?.(workout)}
-                    style={styles.editBtn}
-                  >
-                    <MaterialIcons
-                      name="tune"
-                      size={18}
-                      color={KineticColors.onSurface}
-                    />
-                    <Text style={styles.editBtnText}>Edit</Text>
-                  </TouchableOpacity>
+                  {/* Card Bottom Actions */}
+                  <View style={styles.cardActionsRow}>
+                    <TouchableOpacity
+                      activeOpacity={0.8}
+                      onPress={() => onEditWorkout?.(workout)}
+                      style={styles.editBtn}
+                    >
+                      <MaterialIcons
+                        name="tune"
+                        size={18}
+                        color={KineticColors.onSurface}
+                      />
+                      <Text style={styles.editBtnText}>Edit</Text>
+                    </TouchableOpacity>
 
-                  <TouchableOpacity
-                    activeOpacity={0.8}
-                    onPress={() => onStartWorkout?.(workout)}
-                    style={styles.startBtn}
-                  >
-                    <MaterialIcons name="play-arrow" size={18} color={KineticColors.primaryFixed} />
-                    <Text style={styles.startBtnText}>Start</Text>
-                  </TouchableOpacity>
+                    <TouchableOpacity
+                      activeOpacity={0.8}
+                      onPress={() => onStartWorkout?.(workout)}
+                      style={styles.startBtn}
+                    >
+                      <MaterialIcons name="play-arrow" size={18} color={KineticColors.primaryFixed} />
+                      <Text style={styles.startBtnText}>Start</Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
-              </View>
-            ))}
+              ))
+            )}
           </View>
         </View>
       </ScrollView>

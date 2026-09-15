@@ -7,7 +7,8 @@ import {
   BackHandler,
 } from 'react-native';
 import { useRouter } from 'expo-router';
-import HomeScreen, { WorkoutItem } from './HomeScreen';
+import HomeScreen from './HomeScreen';
+import { UserCreatedWorkout } from '../types/models';
 import RoadmapScreen, { RoadmapItem } from './RoadmapScreen';
 import StatsScreen from './StatsScreen';
 import AccountScreen from './AccountScreen';
@@ -92,26 +93,26 @@ export default function MainTabsScreen({ initialTab = 'home' }: MainTabsScreenPr
     router.push('/create-workout');
   }, [router]);
 
-  const handleEditWorkout = useCallback((workout: WorkoutItem) => {
+  const handleEditWorkout = useCallback((workout: UserCreatedWorkout) => {
     router.push({
       pathname: '/edit-workout',
       params: {
         id: workout.id,
-        title: workout.title,
-        sets: workout.sets,
-        reps: workout.reps,
+        title: workout.workouts?.title || 'Workout',
+        sets: workout.sets_count,
+        reps: workout.reps_count,
       },
     });
   }, [router]);
 
-  const handleStartWorkout = useCallback((workout: WorkoutItem) => {
+  const handleStartWorkout = useCallback((workout: UserCreatedWorkout) => {
     router.push({
       pathname: '/active-workout',
       params: {
         id: workout.id,
-        title: workout.title,
-        sets: workout.sets,
-        reps: workout.reps,
+        title: workout.workouts?.title || 'Workout',
+        sets: workout.sets_count,
+        reps: workout.reps_count,
       },
     });
   }, [router]);
