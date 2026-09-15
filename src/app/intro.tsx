@@ -25,5 +25,5 @@ export default function IntroPage() {
     router.push('/home');
   };
 
-  return <IntroScreen onComplete={handleComplete} />;
+  return <IntroScreen onComplete={handleComplete} isUpdating={isUpdating} />;
 }

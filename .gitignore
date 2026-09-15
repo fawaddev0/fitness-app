@@ -44,3 +44,5 @@ example
 .agents/
 .claude/
 .env
+venv/
+pose_landmarker.task
