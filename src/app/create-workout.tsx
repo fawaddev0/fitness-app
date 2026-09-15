@@ -9,12 +9,12 @@ export default function CreateWorkoutPage() {
     if (router.canGoBack()) {
       router.back();
     } else {
-      router.replace('/home');
+      router.push('/home');
     }
   };
 
   const handleCreateSuccess = () => {
-    router.replace('/home');
+    router.push('/home');
   };
 
   return (

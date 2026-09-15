@@ -27,12 +27,12 @@ export default function ActiveWorkoutPage() {
     if (router.canGoBack()) {
       router.back();
     } else {
-      router.replace('/home');
+      router.push('/home');
     }
   };
 
   const handleFinish = () => {
-    router.replace('/home');
+    router.push('/home');
   };
 
   return (

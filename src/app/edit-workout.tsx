@@ -15,16 +15,16 @@ export default function EditWorkoutPage() {
     if (router.canGoBack()) {
       router.back();
     } else {
-      router.replace('/home');
+      router.push('/home');
     }
   };
 
   const handleSaveSuccess = () => {
-    router.replace('/home');
+    router.push('/home');
   };
 
   const handleDeleteSuccess = () => {
-    router.replace('/home');
+    router.push('/home');
   };
 
   return (

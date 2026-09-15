@@ -16,6 +16,7 @@ import {
   SpaceGrotesk_700Bold,
 } from '@expo-google-fonts/space-grotesk';
 import { KineticColors } from '@/constants/theme';
+import { AuthProvider } from '@/context/AuthContext';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 SystemUI.setBackgroundColorAsync(KineticColors.surface).catch(() => {});
@@ -53,7 +54,7 @@ export default function RootLayout() {
   }
 
   return (
-    <>
+    <AuthProvider>
       <StatusBar style="light" />
       <Stack
         screenOptions={{
@@ -75,6 +76,6 @@ export default function RootLayout() {
         <Stack.Screen name="edit-workout" options={{ headerShown: false, animation: 'ios_from_right' }} />
         <Stack.Screen name="active-workout" options={{ headerShown: false, animation: 'ios_from_right' }} />
       </Stack>
-    </>
+    </AuthProvider>
   );
 }

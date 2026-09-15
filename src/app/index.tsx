@@ -1,13 +1,13 @@
 import React from 'react';
 import { useRouter } from 'expo-router';
-import LoginScreen from '../screens/LoginScreen';
+import AuthScreen from '../screens/AuthScreen';
 
 export default function IndexPage() {
   const router = useRouter();
 
-  const handleLoginSuccess = () => {
-    router.replace('/intro');
+  const handleSuccess = () => {
+    router.push('/intro');
   };
 
-  return <LoginScreen onLoginSuccess={handleLoginSuccess} />;
+  return <AuthScreen onSuccess={handleSuccess} />;
 }
