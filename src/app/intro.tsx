@@ -12,15 +12,15 @@ export default function IntroPage() {
   const handleComplete = async () => {
     if (isUpdating) return;
     setIsUpdating(true);
-    
+
     if (user) {
       const success = await updateUserProfile(user.id, { has_onboarded: true });
-        
+
       if (success) {
         await refreshUserProfile();
       }
     }
-    
+
     setIsUpdating(false);
     router.push('/home');
   };

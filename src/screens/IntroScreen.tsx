@@ -7,6 +7,7 @@ import {
   Pressable,
   Animated,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -120,9 +121,10 @@ const INTRO_STEPS: IntroStep[] = [
 
 interface IntroScreenProps {
   onComplete?: () => void;
+  isUpdating?: boolean;
 }
 
-export default function IntroScreen({ onComplete }: IntroScreenProps) {
+export default function IntroScreen({ onComplete, isUpdating = false }: IntroScreenProps) {
   const [currentStep, setCurrentStep] = useState(0);
   const fadeAnim = useRef(new Animated.Value(1)).current;
   const slideAnim = useRef(new Animated.Value(0)).current;
@@ -167,6 +169,7 @@ export default function IntroScreen({ onComplete }: IntroScreenProps) {
   };
 
   const handleNext = () => {
+    if (isUpdating) return;
     if (!isLastStep) {
       animateTransition(currentStep + 1);
     } else {
@@ -288,22 +291,30 @@ export default function IntroScreen({ onComplete }: IntroScreenProps) {
         <View style={styles.bottomControls}>
           <Animated.View style={{ transform: [{ scale: btnScaleAnim }], width: '100%' }}>
             <Pressable
+              disabled={isUpdating}
               onPressIn={handlePressIn}
               onPressOut={handlePressOut}
               onPress={handleNext}
               style={({ pressed }) => [
                 styles.primaryBtn,
-                pressed && styles.primaryBtnPressed,
+                pressed && !isUpdating && styles.primaryBtnPressed,
+                isUpdating && { opacity: 0.8 },
               ]}
             >
-              <Text style={styles.primaryBtnText}>
-                {isLastStep ? 'Get Started' : 'Next Step'}
-              </Text>
-              <MaterialIcons
-                name={isLastStep ? 'check-circle' : 'arrow-forward'}
-                size={20}
-                color={KineticColors.onPrimary}
-              />
+              {isUpdating ? (
+                <ActivityIndicator color={KineticColors.onPrimary} />
+              ) : (
+                <>
+                  <Text style={styles.primaryBtnText}>
+                    {isLastStep ? 'Get Started' : 'Next Step'}
+                  </Text>
+                  <MaterialIcons
+                    name={isLastStep ? 'check-circle' : 'arrow-forward'}
+                    size={20}
+                    color={KineticColors.onPrimary}
+                  />
+                </>
+              )}
             </Pressable>
           </Animated.View>
 

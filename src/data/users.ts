@@ -27,3 +27,16 @@ export async function updateUserProfile(userId: string, updates: Partial<UserPro
   }
   return true;
 }
+
+export async function createUserProfile(profile: Partial<UserProfile>): Promise<boolean> {
+  const { error } = await supabase
+    .from('users')
+    .insert([profile]);
+
+  if (error) {
+    console.error('Error creating user profile:', error);
+    return false;
+  }
+  return true;
+}
+

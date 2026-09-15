@@ -2,7 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '../utils/supabase';
 import { useRouter, useSegments } from 'expo-router';
-import { getUserProfile } from '../data/users';
+import { getUserProfile, createUserProfile } from '../data/users';
 import { UserProfile } from '../types/models';
 
 type AuthContextType = {
@@ -26,30 +26,42 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const segments = useSegments();
   const router = useRouter();
 
-  const fetchAndSetProfile = async (userId: string) => {
-    const profile = await getUserProfile(userId);
-    setUserProfile(profile);
+  async function handleSessionData(session: Session | null) {
+    if (!session?.user) {
+      setSession(null);
+      setUser(null);
+      setUserProfile(null);
+      setIsLoading(false);
+      return;
+    }
+
+    const profile = await getUserProfile(session.user.id);
+
+    if (profile) {
+      setSession(session);
+      setUser(session.user);
+      setUserProfile(profile);
+    } else {
+      // Profile missing! Invalid state, clear session
+      await supabase.auth.signOut();
+      setSession(null);
+      setUser(null);
+      setUserProfile(null);
+    }
+
+    setIsLoading(false);
   };
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        fetchAndSetProfile(session.user.id).then(() => setIsLoading(false));
-      } else {
-        setIsLoading(false);
-      }
+      handleSessionData(session);
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        fetchAndSetProfile(session.user.id).then(() => setIsLoading(false));
-      } else {
-        setIsLoading(false);
-        setUserProfile(null);
+      // Only process sign out or token refresh here, or if session changed.
+      // We don't want to double fetch on mount since getSession handles it.
+      if (_event !== 'INITIAL_SESSION') {
+        handleSessionData(session);
       }
     });
 
@@ -62,36 +74,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // In Expo Router, the root index.tsx is represented by an empty segments array or ['index']
     const isLoginScreen = !segments[0] || segments[0] === 'index';
     const hasOnboarded = !!userProfile?.has_onboarded;
-    
+
     if (!session && !isLoginScreen) {
-      // Redirect to login if unauthenticated and trying to access protected route
       router.replace('/');
     } else if (session && isLoginScreen) {
-      // Redirect away from login if authenticated
       if (hasOnboarded) {
         router.replace('/home');
       } else {
         router.replace('/intro');
       }
     } else if (session && segments[0] === 'intro' && hasOnboarded) {
-      // Don't let onboarded users see the intro screen
       router.replace('/home');
     }
   }, [session, isLoading, segments, userProfile]);
 
-  const refreshUserProfile = async () => {
-    if (user) {
-      await fetchAndSetProfile(user.id);
+  async function refreshUserProfile() {
+    if (session?.user) {
+      await handleSessionData(session);
     }
-  };
+  }
 
-  const signIn = async (email: string, password: string) => {
+  async function signIn(email: string, password: string) {
     return await supabase.auth.signInWithPassword({ email, password });
-  };
+  }
 
-  const signUp = async (email: string, password: string, fullName: string) => {
-    return await supabase.auth.signUp({ 
-      email, 
+  async function signUp(email: string, password: string, fullName: string) {
+    const response = await supabase.auth.signUp({
+      email,
       password,
       options: {
         data: {
@@ -99,11 +108,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
       }
     });
-  };
 
-  const signOut = async () => {
+    if (response.data?.user && !response.error) {
+      // Create a user profile with default values upon signup
+      await createUserProfile({
+        id: response.data.user.id,
+        fullname: fullName,
+        has_onboarded: false,
+      });
+      // Refresh the local profile state so the router redirects correctly
+      await handleSessionData(response.data.session);
+    }
+
+    return response;
+  }
+
+  async function signOut() {
     await supabase.auth.signOut();
-  };
+  }
 
   return (
     <AuthContext.Provider value={{ session, user, userProfile, isLoading, signIn, signUp, signOut, refreshUserProfile }}>
