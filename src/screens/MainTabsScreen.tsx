@@ -98,9 +98,11 @@ export default function MainTabsScreen({ initialTab = 'home' }: MainTabsScreenPr
       pathname: '/edit-workout',
       params: {
         id: workout.id,
+        workoutId: workout.workout_id,
         title: workout.workouts?.title || 'Workout',
         sets: workout.sets_count,
         reps: workout.reps_count,
+        restSeconds: workout.rest_seconds || workout.workouts?.rest_seconds || 45,
       },
     });
   }, [router]);
@@ -110,9 +112,11 @@ export default function MainTabsScreen({ initialTab = 'home' }: MainTabsScreenPr
       pathname: '/active-workout',
       params: {
         id: workout.id,
+        workoutId: workout.workout_id,
         title: workout.workouts?.title || 'Workout',
         sets: workout.sets_count,
         reps: workout.reps_count,
+        restSeconds: workout.rest_seconds || workout.workouts?.rest_seconds || 45,
       },
     });
   }, [router]);

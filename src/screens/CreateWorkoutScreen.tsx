@@ -35,7 +35,8 @@ export default function CreateWorkoutScreen({
       user.id,
       data.exercise.id,
       data.reps,
-      data.sets
+      data.sets,
+      data.restSeconds
     );
 
     if (result) {

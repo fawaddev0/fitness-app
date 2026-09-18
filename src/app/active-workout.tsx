@@ -6,6 +6,7 @@ export default function ActiveWorkoutPage() {
   const router = useRouter();
   const params = useLocalSearchParams<{
     id?: string;
+    workoutId?: string;
     title?: string;
     sets?: string;
     reps?: string;
@@ -19,9 +20,10 @@ export default function ActiveWorkoutPage() {
   };
 
   const workoutTitle = params.title || 'Seated Shoulder Press';
+  const workoutId = params.workoutId || params.id;
   const targetSets = parseNumber(params.sets, 4);
   const targetReps = parseNumber(params.reps, 12);
-  const restDuration = parseNumber(params.restSeconds, 60);
+  const restDuration = parseNumber(params.restSeconds, 45);
 
   const handleBack = () => {
     if (router.canGoBack()) {
@@ -37,6 +39,7 @@ export default function ActiveWorkoutPage() {
 
   return (
     <ActiveWorkoutScreen
+      workoutId={workoutId}
       workoutTitle={workoutTitle}
       targetSets={targetSets}
       targetReps={targetReps}

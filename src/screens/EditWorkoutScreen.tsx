@@ -1,10 +1,12 @@
-import React from 'react';
-import { Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Alert, View, ActivityIndicator } from 'react-native';
 import {
   WorkoutForm,
   WorkoutFormData,
-  EXERCISE_OPTIONS,
 } from '../components/WorkoutForm';
+import { getGlobalWorkouts } from '../data/workouts';
+import { GlobalWorkout } from '../types/models';
+import { KineticColors } from '../constants/theme';
 
 export interface EditWorkoutScreenProps {
   initialWorkout?: {
@@ -25,14 +27,17 @@ export default function EditWorkoutScreen({
   onSaveSuccess,
   onDeleteSuccess,
 }: EditWorkoutScreenProps) {
-  // Find matching initial exercise option or default to first
-  const initialExercise =
-    EXERCISE_OPTIONS.find((e) =>
-      initialWorkout?.title
-        ? e.name.toLowerCase().includes(initialWorkout.title.toLowerCase()) ||
-          initialWorkout.title.toLowerCase().includes(e.name.toLowerCase())
-        : false
-    ) || EXERCISE_OPTIONS[0];
+  const [globalWorkouts, setGlobalWorkouts] = useState<GlobalWorkout[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadWorkouts() {
+      const workouts = await getGlobalWorkouts();
+      setGlobalWorkouts(workouts);
+      setIsLoading(false);
+    }
+    loadWorkouts();
+  }, []);
 
   const parseNumber = (val: string | number | undefined, defaultVal: number) => {
     if (typeof val === 'number') return val;
@@ -47,10 +52,20 @@ export default function EditWorkoutScreen({
   const initialSets = parseNumber(initialWorkout?.sets, 11);
   const initialRest = initialWorkout?.restSeconds ?? 60;
 
+  // Find matching initial exercise option or default to first
+  const initialExercise =
+    globalWorkouts.find((e) =>
+      initialWorkout?.title
+        ? e.title.toLowerCase().includes(initialWorkout.title.toLowerCase()) ||
+          initialWorkout.title.toLowerCase().includes(e.title.toLowerCase())
+        : false
+    ) || (globalWorkouts.length > 0 ? globalWorkouts[0] : null);
+
   const handleSaveSubmit = (data: WorkoutFormData) => {
+    const exerciseTitle = data.exercise?.title || 'Exercise';
     Alert.alert(
       'Changes Saved',
-      `Changes to "${data.exercise.name}" (${data.sets} sets, ${data.reps} reps, ${data.restSeconds}s rest) have been saved.`,
+      `Changes to "${exerciseTitle}" (${data.sets} sets, ${data.reps} reps, ${data.restSeconds}s rest) have been saved.`,
       [
         {
           text: 'OK',
@@ -90,9 +105,18 @@ export default function EditWorkoutScreen({
     );
   };
 
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, backgroundColor: KineticColors.surface, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color={KineticColors.primaryFixed} />
+      </View>
+    );
+  }
+
   return (
     <WorkoutForm
       mode="edit"
+      options={globalWorkouts}
       initialData={{
         exercise: initialExercise,
         reps: initialReps,

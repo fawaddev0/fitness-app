@@ -9,6 +9,7 @@ export default function EditWorkoutPage() {
     title?: string;
     sets?: string;
     reps?: string;
+    restSeconds?: string;
   }>();
 
   const handleBack = () => {
@@ -34,6 +35,7 @@ export default function EditWorkoutPage() {
         title: params.title,
         sets: params.sets,
         reps: params.reps,
+        restSeconds: params.restSeconds ? parseInt(params.restSeconds, 10) : undefined,
       }}
       onBack={handleBack}
       onSaveSuccess={handleSaveSuccess}

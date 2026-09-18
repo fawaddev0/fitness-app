@@ -72,7 +72,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (isLoading) return;
 
     // In Expo Router, the root index.tsx is represented by an empty segments array or ['index']
-    const isLoginScreen = !segments[0] || segments[0] === 'index';
+    const firstSegment = segments[0] as string | undefined;
+    const isLoginScreen = !firstSegment || firstSegment === 'index';
     const hasOnboarded = !!userProfile?.has_onboarded;
 
     if (!session && !isLoginScreen) {

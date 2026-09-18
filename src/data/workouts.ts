@@ -1,5 +1,5 @@
 import { supabase } from '../utils/supabase';
-import { GlobalWorkout, UserCreatedWorkout } from '../types/models';
+import { GlobalWorkout, UserCreatedWorkout, PostureLandmark } from '../types/models';
 
 export async function getGlobalWorkouts(): Promise<GlobalWorkout[]> {
   const { data, error } = await supabase
@@ -32,7 +32,8 @@ export async function createUserWorkout(
   userId: string,
   workoutId: string,
   repsCount: number,
-  setsCount: number
+  setsCount: number,
+  restSeconds: number = 45
 ): Promise<UserCreatedWorkout | null> {
   const { data, error } = await supabase
     .from('user_created_workouts')
@@ -42,6 +43,7 @@ export async function createUserWorkout(
         workout_id: workoutId,
         reps_count: repsCount,
         sets_count: setsCount,
+        rest_seconds: restSeconds,
       }
     ])
     .select('*, workouts(*)')
@@ -52,4 +54,22 @@ export async function createUserWorkout(
     return null;
   }
   return data;
+}
+
+export async function getPosturesLandmarks(workoutId?: string): Promise<PostureLandmark[]> {
+  try {
+    let query = supabase.from('postures_landmarks').select('*');
+    if (workoutId) {
+      query = query.eq('workout_id', workoutId);
+    }
+    const { data, error } = await query;
+    if (error) {
+      console.warn('Error fetching postures_landmarks from Supabase:', error);
+      return [];
+    }
+    return data || [];
+  } catch (err) {
+    console.warn('Network error fetching postures_landmarks:', err);
+    return [];
+  }
 }
