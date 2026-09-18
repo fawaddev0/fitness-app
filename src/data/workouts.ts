@@ -14,6 +14,25 @@ export async function getGlobalWorkouts(): Promise<GlobalWorkout[]> {
   return data || [];
 }
 
+export async function getWorkoutById(workoutId: string): Promise<GlobalWorkout | null> {
+  try {
+    const { data, error } = await supabase
+      .from('workouts')
+      .select('*')
+      .eq('id', workoutId)
+      .single();
+
+    if (error) {
+      console.warn('Error fetching workout details:', error.message);
+      return null;
+    }
+    return data;
+  } catch (err) {
+    console.error('Failed to get workout by id:', err);
+    return null;
+  }
+}
+
 export async function getUserWorkouts(userId: string): Promise<UserCreatedWorkout[]> {
   const { data, error } = await supabase
     .from('user_created_workouts')
